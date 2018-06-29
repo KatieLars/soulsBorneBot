@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/KatieLars/soulsBorneBot#readme",
   "dependencies": {
+    "dotenv": "^6.0.0",
     "twit": "^2.2.10"
   }
 }
