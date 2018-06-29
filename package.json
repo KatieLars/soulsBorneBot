@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/KatieLars/soulsBorneBot/issues"
   },
-  "homepage": "https://github.com/KatieLars/soulsBorneBot#readme"
+  "homepage": "https://github.com/KatieLars/soulsBorneBot#readme",
+  "dependencies": {
+    "twit": "^2.2.10"
+  }
 }
