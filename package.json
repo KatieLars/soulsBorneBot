@@ -1,0 +1,23 @@
+{
+  "name": "soulsbornebot",
+  "version": "1.0.0",
+  "description": "twitter bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "testBot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/KatieLars/soulsBorneBot.git"
+  },
+  "keywords": [
+    "SoulsBorne",
+    "Bot"
+  ],
+  "author": "KatieLars",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KatieLars/soulsBorneBot/issues"
+  },
+  "homepage": "https://github.com/KatieLars/soulsBorneBot#readme"
+}
