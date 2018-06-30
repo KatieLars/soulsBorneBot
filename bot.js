@@ -1,6 +1,6 @@
 require('dotenv').config()
-var twit = require(’twit’);
-var config = require(’./config.js’);
+var twit = require('twit');
+var config = require('./config.js');
 var Twitter = new twit(config);
 const fs = require('fs'); //file system
 const readline = require('readline');
@@ -26,25 +26,25 @@ var tweet = () => {
     redirect_uri: process.env.REDIRECT_URI}
     //establishing a set group of values, then adding OAuth
   credentials.OAuth2Client =  new google.auth.OAuth2(
-      client_id, client_secret, redirect_uri[0]);
-  if (err) return console.log('Error constructing content', err);
+      credentials.client_id, credentials.client_secret, credentials.redirect_uri[0]);
+  // if (err) return console.log('Error constructing content', err);
   // Authorize a client with credentials, then call the Google Sheets API.
   authorize(credentials, grabBosses);
   //sends credentials and callback function . . .
   //you should get some kind of return value here with data from the API
-  Twitter.post('statuses/update', params, (err, data) => {
-    //there needs to be a randomizer and an array that tracks
-      //those bosses that have already been posted
-    if(!err) {
-
-    }
-  })
+  // Twitter.post('statuses/update', params, (err, data) => {
+  //   //there needs to be a randomizer and an array that tracks
+  //     //those bosses that have already been posted
+  //   // if(!err) {
+  //   //
+  //   // }
+  // })
 };//end tweet
 
 function authorize(credentials, callback) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     //fires if no token (error)
-    if (err) return getNewToken(OAuth2Client, callback);
+    if (err) return getNewToken(credentials.OAuth2Client, callback);
     //sets token for session
     OAuth2Client.setCredentials(JSON.parse(token));
     //Proceeds with API call once token set
@@ -106,7 +106,7 @@ function grabBosses(auth, range){
       } else {
         console.log('No data found.');
       }
-});
+})};
 
 tweet()
 
