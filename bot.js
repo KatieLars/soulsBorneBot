@@ -31,6 +31,14 @@ var tweet = () => {
   // Authorize a client with credentials, then call the Google Sheets API.
   authorize(credentials, grabBosses);
   //sends credentials and callback function . . .
+  //you should get some kind of return value here with data from the API
+  Twitter.post('statuses/update', params, (err, data) => {
+    //there needs to be a randomizer and an array that tracks
+      //those bosses that have already been posted
+    if(!err) {
+
+    }
+  })
 };//end tweet
 
 function authorize(credentials, callback) {
@@ -86,43 +94,19 @@ function grabBosses(auth, range){
     range: `${range}`,
     majorDimension: "ROWS"
   };
-  sheets.spreadsheets.values.get(request, function(err, response) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    else {
-      c
-    }
-  });
+  sheets.spreadsheets.values.get(request, (err, {data}) => {
+      if (err) return console.log('The API returned an error: ' + err);
+      const rows = data.values;
+      if (rows.length) {
+        console.log('Name, Major:');
+        // Print columns A and E, which correspond to indices 0 and 4.
+        rows.map((row) => {
+          console.log(`${row[0]}, ${row[4]}`);
+        });
+      } else {
+        console.log('No data found.');
+      }
 });
-
-function authorize(callback) {
-  // TODO: Change placeholder below to generate authentication credentials. See
-  // https://developers.google.com/sheets/quickstart/nodejs#step_3_set_up_the_sample
-  //
-  // Authorize using one of the following scopes:
-  //   'https://www.googleapis.com/auth/drive'
-  //   'https://www.googleapis.com/auth/drive.file'
-  //   'https://www.googleapis.com/auth/drive.readonly'
-  //   'https://www.googleapis.com/auth/spreadsheets'
-  //   'https://www.googleapis.com/auth/spreadsheets.readonly'
-  var authClient = null;
-
-  if (authClient == null) {
-    console.log('authentication failed');
-    return;
-  }
-  callback(authClient);
-}
-
-
-Twitter.post('statuses/update', params, (err, data) => {
-  if(!err) {
-
-  }
-})
-
 
 tweet()
 
