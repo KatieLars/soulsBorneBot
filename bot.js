@@ -5,7 +5,7 @@ var Twitter = new twit(config);
 const fs = require('fs'); //file system
 const readline = require('readline');
 const {google} = require('googleapis');
-var sheets = google.sheets('v4');
+//var sheets = google.sheets('v4');
 
 //initial auth stuff that may need to be used again for some other reason
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -65,7 +65,7 @@ function getNewToken(OAuth2Client, callback) {
         if (err) console.error(err);
         console.log('Token stored to', TOKEN_PATH);
       });
-      callback(OAuth2Client);
+      callback(OAuth2Client, "A2:C27");
     });
   });
 }
@@ -78,12 +78,13 @@ function getNewToken(OAuth2Client, callback) {
   //apiCall(`1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc`, "A2:C27", "COLUMN")
 
 //eventually get will have to become batchGet to accomodate multiple tabs on
-//the same sheet
-function grabBosses(id, range, majorDimension){
+  //the same sheet
+function grabBosses(auth, range){
+  const sheets = google.sheets({version: 'v4', auth})
   var request = {
-    spreadsheetId: `${id}`,
+    spreadsheetId: "1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc",
     range: `${range}`,
-    majorDimension: `${majorDimension}`
+    majorDimension: "ROWS"
   };
   sheets.spreadsheets.values.get(request, function(err, response) {
     if (err) {
