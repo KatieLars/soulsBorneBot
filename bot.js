@@ -2,7 +2,7 @@ require('dotenv').config()
 var twit = require(’twit’);
 var config = require(’./config.js’);
 var Twitter = new twit(config);
-const fs = require('fs');
+const fs = require('fs'); //file system
 const readline = require('readline');
 const {google} = require('googleapis');
 var sheets = google.sheets('v4');
@@ -10,41 +10,8 @@ var sheets = google.sheets('v4');
 //initial auth stuff that may need to be used again for some other reason
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 //only authorization we need because get requests are the only thing we're doing
-//const TOKEN_PATH = 'credentials.json'; //but what is credentials.json?
+const TOKEN_PATH = 'credentials.json'; //but what is credentials.json?
 //initially will get token from first login
-function authorize(credentials, callback) {
-  (err, token) => {
-    if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
-  });
-}
-
-function getNewToken(oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
-  });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return callback(err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
-      });
-      callback(oAuth2Client);
-    });
-  });
-}
-
 //tweet
 var tweet = () => {
   // const client_id = process.env.GOOGLE_CLIENT_ID;
@@ -63,8 +30,45 @@ var tweet = () => {
   if (err) return console.log('Error constructing content', err);
   // Authorize a client with credentials, then call the Google Sheets API.
   authorize(credentials, grabBosses);
- };
+  //sends credentials and callback function . . .
+};//end tweet
 
+function authorize(credentials, callback) {
+  fs.readFile(TOKEN_PATH, (err, token) => {
+    //fires if no token (error)
+    if (err) return getNewToken(OAuth2Client, callback);
+    //sets token for session
+    OAuth2Client.setCredentials(JSON.parse(token));
+    //Proceeds with API call once token set
+    callback(OAuth2Client, );
+  });
+}
+
+function getNewToken(OAuth2Client, callback) {
+  //only fires if no token
+  const authUrl = OAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES,
+  });
+  console.log('Authorize this app by visiting this url:', authUrl);
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  rl.question('Enter the code from that page here: ', (code) => {
+    rl.close();
+    OAuth2Client.getToken(code, (err, token) => {
+      if (err) return callback(err);
+      OAuth2Client.setCredentials(token);
+      // Store the token to disk for later program executions
+      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+        if (err) console.error(err);
+        console.log('Token stored to', TOKEN_PATH);
+      });
+      callback(OAuth2Client);
+    });
+  });
+}
 //first makes an api call to Google Sheets
 //makes a second api call to Twitter to post the tweet
 //1. at 8:30 am and 5:30 pm:
@@ -73,8 +77,9 @@ var tweet = () => {
 
   //apiCall(`1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc`, "A2:C27", "COLUMN")
 
-
-var apiCall = (id, range, majorDimension) => {
+//eventually get will have to become batchGet to accomodate multiple tabs on
+//the same sheet
+function grabBosses(id, range, majorDimension){
   var request = {
     spreadsheetId: `${id}`,
     range: `${range}`,
