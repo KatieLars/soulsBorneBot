@@ -10,15 +10,15 @@ var sheets = google.sheets('v4');
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 //only authorization we need because get requests are the only thing we're doing
 const TOKEN_PATH = 'credentials.json';
+//initially will get token from first login
 
-// Load client secrets from a local file.
-fs.readFile('client_secret.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), listMajors);
-});
+var tweet = function((err, content) => {
+   if (err) return console.log('Error loading client secret file:', err);
+//   // Authorize a client with credentials, then call the Google Sheets API.
+   authorize(JSON.parse(content), listMajors);
+ });
 
-function authorize(credentials, callback) {
+function authorize(callback) {
   const client_id = process.env.GOOGLE_CLIENT_ID;
   const client_secret = process.env.GOOGLE_CLIENT_SECRET;
   const redirect_uri = process.env.REDIRECT_URI
@@ -64,6 +64,7 @@ function getNewToken(oAuth2Client, callback) {
 //3. gets this data and randomly chooses
 var tweet = () => {
   //api call to google sheets
+  googleApiCall()
   apiCall(`1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc`, "A2:C27", "COLUMN")
 
 
@@ -113,5 +114,6 @@ Twitter.post('statuses/update', params, (err, data) => {
 })
 
 
+tweet()
 
-setInterval(tweet, 3000000);
+setInterval(tweet, 28800000);
