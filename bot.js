@@ -8,13 +8,22 @@ const {google} = require('googleapis');
 var sheets = google.sheets('v4');
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+//only authorization we need because get requests are the only thing we're doing
+const TOKEN_PATH = 'credentials.json';
+
+// Load client secrets from a local file.
+fs.readFile('client_secret.json', (err, content) => {
+  if (err) return console.log('Error loading client secret file:', err);
+  // Authorize a client with credentials, then call the Google Sheets API.
+  authorize(JSON.parse(content), listMajors);
+});
 
 function authorize(credentials, callback) {
   const client_id = process.env.GOOGLE_CLIENT_ID;
   const client_secret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirect_uri = process.env.REDIRECT_URI
   const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret);
-
+      client_id, client_secret, redirect_uri[0]);
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
