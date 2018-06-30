@@ -7,25 +7,13 @@ const readline = require('readline');
 const {google} = require('googleapis');
 var sheets = google.sheets('v4');
 
+//initial auth stuff that may need to be used again for some other reason
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 //only authorization we need because get requests are the only thing we're doing
-const TOKEN_PATH = 'credentials.json';
+//const TOKEN_PATH = 'credentials.json'; //but what is credentials.json?
 //initially will get token from first login
-
-var tweet = function((err, content) => {
-   if (err) return console.log('Error loading client secret file:', err);
-//   // Authorize a client with credentials, then call the Google Sheets API.
-   authorize(JSON.parse(content), listMajors);
- });
-
-function authorize(callback) {
-  const client_id = process.env.GOOGLE_CLIENT_ID;
-  const client_secret = process.env.GOOGLE_CLIENT_SECRET;
-  const redirect_uri = process.env.REDIRECT_URI
-  const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uri[0]);
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
+function authorize(credentials, callback) {
+  (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
     callback(oAuth2Client);
@@ -57,18 +45,34 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
+//tweet
+var tweet = () => {
+  // const client_id = process.env.GOOGLE_CLIENT_ID;
+  // const client_secret = process.env.GOOGLE_CLIENT_SECRET;
+  // const redirect_uri = process.env.REDIRECT_URI
+  // const oAuth2Client = new google.auth.OAuth2(
+  //     client_id, client_secret, redirect_uri[0]);
+  // //grabs constants from hidden .env file
+  // const {client_secret, client_id, redirect_uris} = credentials.installed
+  let credentials = {client_id: process.env.GOOGLE_CLIENT_ID,
+    client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    redirect_uri: process.env.REDIRECT_URI}
+    //establishing a set group of values, then adding OAuth
+  credentials.OAuth2Client =  new google.auth.OAuth2(
+      client_id, client_secret, redirect_uri[0]);
+  if (err) return console.log('Error constructing content', err);
+  // Authorize a client with credentials, then call the Google Sheets API.
+  authorize(credentials, grabBosses);
+ };
+
 //first makes an api call to Google Sheets
 //makes a second api call to Twitter to post the tweet
 //1. at 8:30 am and 5:30 pm:
 //2. calls the spread sheet
 //3. gets this data and randomly chooses
-var tweet = () => {
-  //api call to google sheets
-  googleApiCall()
-  apiCall(`1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc`, "A2:C27", "COLUMN")
 
+  //apiCall(`1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc`, "A2:C27", "COLUMN")
 
-}
 
 var apiCall = (id, range, majorDimension) => {
   var request = {
