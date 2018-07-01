@@ -10,20 +10,13 @@ const {google} = require('googleapis');
 //initial auth stuff that may need to be used again for some other reason
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 //only authorization we need because get requests are the only thing we're doing
-const TOKEN_PATH = 'credentials.json'; //but what is credentials.json?
+const TOKEN_PATH = 'credentials.json'; //created to store access token
 //initially will get token from first login
 //tweet
 var tweet = () => {
-  // const client_id = process.env.GOOGLE_CLIENT_ID;
-  // const client_secret = process.env.GOOGLE_CLIENT_SECRET;
-  // const redirect_uri = process.env.REDIRECT_URI
-  // const oAuth2Client = new google.auth.OAuth2(
-  //     client_id, client_secret, redirect_uri[0]);
-  // //grabs constants from hidden .env file
-  // const {client_secret, client_id, redirect_uris} = credentials.installed
   let credentials = {client_id: process.env.GOOGLE_CLIENT_ID,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
-    redirect_uri: process.env.REDIRECT_URI}
+    redirect_uri: process.env.REDIRECT_URI.split(",")}
     //establishing a set group of values, then adding OAuth
   credentials.OAuth2Client =  new google.auth.OAuth2(
       credentials.client_id, credentials.client_secret, credentials.redirect_uri[0]);
