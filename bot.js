@@ -5,48 +5,88 @@ var Twitter = new twit(config);
 const fs = require('fs'); //file system
 const readline = require('readline');
 const {google} = require('googleapis');
-//var sheets = google.sheets('v4');
+var borneBosses = []
+
+// Twitter.post('statuses/update', { status: 'Look, I am tweeting!' }, function(err, data, response) {
+//   console.log(data)
+// });
 
 //initial auth stuff that may need to be used again for some other reason
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 //only authorization we need because get requests are the only thing we're doing
 const TOKEN_PATH = 'credentials.json'; //created to store access token
-//initially will get token from first login
+
 //tweet
-var tweet = () => {
+var preTweet = () => {
   let credentials = {client_id: process.env.GOOGLE_CLIENT_ID,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     redirect_uri: process.env.REDIRECT_URI.split(",")}
     //establishing a set group of values, then adding OAuth
   credentials.OAuth2Client =  new google.auth.OAuth2(
       credentials.client_id, credentials.client_secret, credentials.redirect_uri[0]);
-  // if (err) return console.log('Error constructing content', err);
   // Authorize a client with credentials, then call the Google Sheets API.
   authorize(credentials, grabBosses);
-  //sends credentials and callback function . . .
-  //you should get some kind of return value here with data from the API
-  // Twitter.post('statuses/update', params, (err, data) => {
+};//end preTweet
+
+var tweet = (bossArray) => {
+  var randomBoss = randomFromArray(bossArray)
+  var b64content = fs.readFileSync(randomBoss[1], { encoding: 'base64' })
+  Twitter.post('media/upload', { media_data: b64content }, function (err, data, response) {
+    if (err){
+      console.log('ERROR:');
+      console.log(err);
+    }
+    else{
+      console.log('Image uploaded!');
+      console.log('Now tweeting it...');
+      Twitter.post('statuses/update', {
+        media_ids: new Array(data.media_id_string),//what is data?
+        status: `${randomBoss[0]}: ${randomBoss[2]}`
+      },
+        function(err, data, response) {
+          if (err){
+            console.log('ERROR:');
+            console.log(err);
+          }
+          else{
+            console.log('Posted an image!');
+          }
+        }
+      );
+    }
+  });
+  // var params = {
+  // q: '#nodejs, #Nodejs',  // REQUIRED
+  // result_type: 'recent',
+  // lang: 'en'
+  // }
+
+  // Twitter.post('media/upload', params, (err, data) => {
+  //
   //   //there needs to be a randomizer and an array that tracks
   //     //those bosses that have already been posted
   //   // if(!err) {
   //   //
   //   // }
   // })
-};//end tweet
+
+}
 
 function authorize(credentials, callback) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     //fires if no token (error)
     if (err) return getNewToken(credentials.OAuth2Client, callback);
     //sets token for session
-    OAuth2Client.setCredentials(JSON.parse(token));
+    credentials.OAuth2Client.setCredentials(JSON.parse(token));
     //Proceeds with API call once token set
-    callback(OAuth2Client, );
+    callback(credentials.OAuth2Client, "A2:C27");
   });
 }
 
-function getNewToken(OAuth2Client, callback) {
+function getNewToken(OAuth2Client, callback) { //working
   //only fires if no token
+  //all handled in the command line . . .
+  //tokens last 6 months
   const authUrl = OAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
@@ -91,16 +131,16 @@ function grabBosses(auth, range){
       if (err) return console.log('The API returned an error: ' + err);
       const rows = data.values;
       if (rows.length) {
-        console.log('Name, Major:');
-        // Print columns A and E, which correspond to indices 0 and 4.
-        rows.map((row) => {
-          console.log(`${row[0]}, ${row[4]}`);
-        });
+        tweet(rows)
       } else {
         console.log('No data found.');
       }
 })};
 
-tweet()
+function randomFromArray(bossArray){//bossArray is an array of arrays
+  return bossArray[Math.floor(Math.random() * bossArray.length)];
+}
 
-setInterval(tweet, 28800000);
+preTweet()
+
+setInterval(preTweet, 28800000);
