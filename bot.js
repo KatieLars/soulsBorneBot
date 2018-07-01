@@ -5,11 +5,6 @@ var Twitter = new twit(config);
 const fs = require('fs'); //file system
 const readline = require('readline');
 const {google} = require('googleapis');
-var borneBosses = []
-
-// Twitter.post('statuses/update', { status: 'Look, I am tweeting!' }, function(err, data, response) {
-//   console.log(data)
-// });
 
 //initial auth stuff that may need to be used again for some other reason
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -55,21 +50,6 @@ var tweet = (bossArray) => {
       );
     }
   });
-  // var params = {
-  // q: '#nodejs, #Nodejs',  // REQUIRED
-  // result_type: 'recent',
-  // lang: 'en'
-  // }
-
-  // Twitter.post('media/upload', params, (err, data) => {
-  //
-  //   //there needs to be a randomizer and an array that tracks
-  //     //those bosses that have already been posted
-  //   // if(!err) {
-  //   //
-  //   // }
-  // })
-
 }
 
 function authorize(credentials, callback) {
@@ -110,16 +90,7 @@ function getNewToken(OAuth2Client, callback) { //working
     });
   });
 }
-//first makes an api call to Google Sheets
-//makes a second api call to Twitter to post the tweet
-//1. at 8:30 am and 5:30 pm:
-//2. calls the spread sheet
-//3. gets this data and randomly chooses
 
-  //apiCall(`1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc`, "A2:C27", "COLUMN")
-
-//eventually get will have to become batchGet to accomodate multiple tabs on
-  //the same sheet
 function grabBosses(auth, range){
   const sheets = google.sheets({version: 'v4', auth})
   var request = {
@@ -143,4 +114,4 @@ function randomFromArray(bossArray){//bossArray is an array of arrays
 
 preTweet()
 
-setInterval(preTweet, 28800000);
+setInterval(preTweet, 21600000);
