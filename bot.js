@@ -16,22 +16,26 @@ const SPREADSHEET_ID = '1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc'
 //tweet
 
 var preTweet = () => {
-
 googleAuth.authorize()
     .then((auth) => {
-        sheetsApi.spreadsheets.values.get({
-            auth: auth,
-            spreadsheetId: SPREADSHEET_ID,
-            range: "'Dark Souls'!A2:C27",
-            majorDimension: "ROWS"
-        }, function (err, response) {
+      grabBosses(auth, "A2:C27"),
+        // let credentials = {
+        //   key: process.env.GOOGLE_API_KEY
+        // }
+        // sheetsApi.spreadsheets.values.get({
+        //     auth: auth,
+        //     spreadsheetId: SPREADSHEET_ID,
+        //     range: "A2:C27",
+        //     majorDimension: "ROWS"},
+       function (err, response) {
             if (err) {
                 console.log('The API returned an error: ' + err);
                 return console.log(err);
             }
             var rows = response.values;
+            console.log(auth.credentials)
             tweet(rows)
-        });
+        };
     })
     .catch((err) => {
         console.log('auth error', err);
@@ -116,22 +120,24 @@ var tweet = (bossArray) => {
 //   });
 // }
 
-// function grabBosses(auth, range){
-//   const sheets = google.sheets({version: 'v4', auth})
-//   var request = {
-//     spreadsheetId: "1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc",
-//     range: `${range}`,
-//     majorDimension: "ROWS"
-//   };
-//   sheets.spreadsheets.values.get(request, (err, {data}) => {
-//       if (err) return console.log('The API returned an error: ' + err);
-//       const rows = data.values;
-//       if (rows.length) {
-//         tweet(rows)
-//       } else {
-//         console.log('No data found.');
-//       }
-// })};
+function grabBosses(auth, range){
+  console.log(auth)
+  const sheets = google.sheets({version: 'v4', auth})
+  var request = {
+    spreadsheetId: "1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc",
+    range: `${range}`,
+    majorDimension: "ROWS"
+  };
+  sheets.spreadsheets.values.get(request, (err, {data}) => {
+      if (err) return console.log('The API returned an error: ' + err);
+      const rows = data.values;
+      if (rows.length) {
+
+        tweet(rows)
+      } else {
+        console.log('No data found.');
+      }
+})};
 
 function randomFromArray(bossArray){//bossArray is an array of arrays
   return bossArray[Math.floor(Math.random() * bossArray.length)];
