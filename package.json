@@ -23,6 +23,7 @@
   "dependencies": {
     "dotenv": "^6.0.0",
     "googleapis": "^32.0.0",
+    "gulp-cli": "^2.0.1",
     "node-aws-lambda": "^0.1.8",
     "twit": "^2.2.11"
   },
