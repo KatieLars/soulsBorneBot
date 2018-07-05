@@ -8,10 +8,6 @@ const {google} = require('googleapis');
 const googleAuth = require('./auth')
 const sheetsApi = google.sheets('v4')
 
-//initial auth stuff that may need to be used again for some other reason
-// const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-//only authorization we need because get requests are the only thing we're doing
-//const TOKEN_PATH = 'credentials.json'; //created to store access token
 const SPREADSHEET_ID = '1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc'
 //tweet
 
@@ -19,14 +15,6 @@ var preTweet = () => {
 googleAuth.authorize()
     .then((auth) => {
       grabBosses(auth, "A2:C27"),
-        // let credentials = {
-        //   key: process.env.GOOGLE_API_KEY
-        // }
-        // sheetsApi.spreadsheets.values.get({
-        //     auth: auth,
-        //     spreadsheetId: SPREADSHEET_ID,
-        //     range: "A2:C27",
-        //     majorDimension: "ROWS"},
        function (err, response) {
             if (err) {
                 console.log('The API returned an error: ' + err);
