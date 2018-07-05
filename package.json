@@ -25,5 +25,8 @@
     "googleapis": "^32.0.0",
     "node-aws-lambda": "^0.1.8",
     "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
   }
 }
