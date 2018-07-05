@@ -1,4 +1,3 @@
-//const {GoogleAuth, JWT, OAuth2Client} = require('google-auth-library')
 const gal = require('google-auth-library');
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 // const oAuth2Client = new gal.OAuth2Client();

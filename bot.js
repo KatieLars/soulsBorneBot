@@ -9,7 +9,6 @@ const googleAuth = require('./auth')
 const sheetsApi = google.sheets('v4')
 
 const SPREADSHEET_ID = '1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc'
-//tweet
 
 var preTweet = () => {
 googleAuth.authorize()
@@ -29,16 +28,6 @@ googleAuth.authorize()
         console.log('auth error', err);
     })
   }
-// var preTweet = () => {
-//   let credentials = {client_id: process.env.GOOGLE_CLIENT_ID,
-//     client_secret: process.env.GOOGLE_CLIENT_SECRET,
-//     redirect_uri: process.env.REDIRECT_URI.split(",")}
-//     //establishing a set group of values, then adding OAuth
-//   credentials.OAuth2Client =  new google.auth.OAuth2(
-//       credentials.client_id, credentials.client_secret, credentials.redirect_uri[0]);
-//   // Authorize a client with credentials, then call the Google Sheets API.
-//   authorize(credentials, grabBosses);
-// };//end preTweet
 
 var tweet = (bossArray) => {
   var randomBoss = randomFromArray(bossArray)
@@ -109,7 +98,6 @@ var tweet = (bossArray) => {
 // }
 
 function grabBosses(auth, range){
-  console.log(auth)
   const sheets = google.sheets({version: 'v4', auth})
   var request = {
     spreadsheetId: "1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc",
