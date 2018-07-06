@@ -20,9 +20,9 @@ googleAuth.authorize()
                 console.log('The API returned an error: ' + err);
                 return console.log(err);
             }
-            var rows = response.values;
-            console.log(auth.credentials)
-            tweet(rows)
+            // var rows = response.values;
+            // console.log(auth.credentials)
+            // selectBoss(rows)
         };
     })
     .catch((err) => {
@@ -30,9 +30,16 @@ googleAuth.authorize()
     })
   }
 
-var tweet = (bossArray) => {
-  var randomBoss = randomFromArray(bossArray)
-  var b64content = fs.readFileSync(randomBoss[1], { encoding: 'base64' })
+// function selectBoss(bossArray) {
+//   var randomBoss = randomFromArray(bossArray)
+//   tweet(boss)
+// }
+
+var tweet = (boss) => {
+//  var randomBoss = randomFromArray(bossArray)
+//  console.log(randomBoss)
+  console.log(alreadyTweeted.list)
+  var b64content = fs.readFileSync(boss[1], { encoding: 'base64' })
   Twitter.post('media/upload', { media_data: b64content }, function (err, data, response) {
     if (err){
       console.log('ERROR:');
@@ -43,7 +50,7 @@ var tweet = (bossArray) => {
       console.log('Now tweeting it...');
       Twitter.post('statuses/update', {
         media_ids: new Array(data.media_id_string),//what is data?
-        status: `${randomBoss[0]}: ${randomBoss[2]}`
+        status: `${boss[0]}: ${boss[2]}`
       },
         function(err, data, response) {
           if (err){
@@ -108,37 +115,38 @@ function grabBosses(auth){
       if (err) return console.log('The API returned an error: ' + err);
       const rows = data.values;
       if (rows.length) {
-
-        tweet(rows)
+        selectBoss(rows)
       } else {
         console.log('No data found.');
       }
 })};
 
-function randomFromArray(bossArray){//bossArray is an array of arrays
+// function selectBoss(bossArray) {
+//   randomFromArray(bossArray)
+// }
+
+function selectBoss(bossArray){//bossArray is an array of arrays
   let chosenBoss = bossArray[Math.floor(Math.random() * bossArray.length)];
-  console.log(chosenBoss)
+  //console.log(chosenBoss)
   duplicateBoss(chosenBoss, bossArray)
 }
 
 function duplicateBoss(boss, bossArray){
-  // console.log(boss[0])
-  //
-  // let list = alreadyTweeted.list
   if (alreadyTweeted.list.length < bossArray.length) {
-    console.log(list.includes(boss[0]))
     if (alreadyTweeted.list.includes(boss[0])) { //if boss is in the list
-      return randomFromArray(bossArray)
+      selectBoss(bossArray)
     }
     else {
       alreadyTweeted.list.push(boss)
-      return boss
+      tweet(boss)
     }
-  } else {
+   }
+  else {
     alreadyTweeted.list.clear()
+    selectBoss(bossArray)
   }
 }
 
 preTweet()
 
-//setInterval(preTweet, 7200000);
+setInterval(preTweet, 7200000);
