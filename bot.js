@@ -121,4 +121,4 @@ function randomFromArray(bossArray){//bossArray is an array of arrays
 
 preTweet()
 
-// setInterval(preTweet, 14400000);
+setInterval(preTweet, 7200000);
