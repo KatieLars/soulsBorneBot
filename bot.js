@@ -11,6 +11,43 @@ const googleAuth = require('./auth')
 const sheetsApi = google.sheets('v4')
 const SPREADSHEET_ID = '1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc'
 
+function randomSearchTerm(){
+  let searchTerms = ["#Sekiro", "#DarkSouls", "#ShadowsDieTwice", "#Bloodborne",
+    "#DemonSouls", "#SoulsBorne"]
+  return searchTerms[Math.floor(Math.random() * searchTerms.length)];
+
+}
+
+function retweet() {
+  var searchTerm = randomSearchTerm()
+  console.log(searchTerm)
+  var params = {
+    q: `${searchTerm}`,
+    lang: 'en'
+  }
+  Twitter.get('search/tweets', params, function(err, data) {
+      // if there no errors
+        if (!err) {
+            var retweetId = data.statuses[0].id_str;
+            console.log(retweetId)
+            Twitter.post('statuses/retweet/:id', {
+                id: retweetId
+            }, function(err, response) {
+                if (response) {
+                    console.log('Retweeted!!!');
+                }
+                if (err) {
+                    console.log('Something went wrong while RETWEETING... Duplication maybe...');
+                }
+            });
+        }
+        else {
+          console.log('Something went wrong while SEARCHING...');
+        }
+    });
+  }
+
+
 var preTweet = () => {
 googleAuth.authorize()
     .then((auth) => {
@@ -135,5 +172,6 @@ function duplicateBoss(boss, bossArray){
 }
 
 preTweet()
-//7200000
-setInterval(preTweet, 7200000);
+setInterval(preTweet, 7200000000);
+retweet()
+setInterval(retweet, 3600000000)
