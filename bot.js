@@ -2,12 +2,13 @@ require('dotenv').config()
 var twit = require('twit');
 var config = require('./config.js');
 var Twitter = new twit(config);
+var TweetList = require('./TweetList')
+var alreadyTweeted = new TweetList([])
 const fs = require('fs'); //file system
 const readline = require('readline');
 const {google} = require('googleapis');
 const googleAuth = require('./auth')
 const sheetsApi = google.sheets('v4')
-
 const SPREADSHEET_ID = '1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc'
 
 var preTweet = () => {
@@ -106,7 +107,6 @@ function grabBosses(auth){
   sheets.spreadsheets.values.get(request, (err, {data}) => {
       if (err) return console.log('The API returned an error: ' + err);
       const rows = data.values;
-      console.log(rows)
       if (rows.length) {
 
         tweet(rows)
@@ -116,7 +116,27 @@ function grabBosses(auth){
 })};
 
 function randomFromArray(bossArray){//bossArray is an array of arrays
-  return bossArray[Math.floor(Math.random() * bossArray.length)];
+  let chosenBoss = bossArray[Math.floor(Math.random() * bossArray.length)];
+  console.log(chosenBoss)
+  duplicateBoss(chosenBoss, bossArray)
+}
+
+function duplicateBoss(boss, bossArray){
+  // console.log(boss[0])
+  //
+  // let list = alreadyTweeted.list
+  if (alreadyTweeted.list.length < bossArray.length) {
+    console.log(list.includes(boss[0]))
+    if (alreadyTweeted.list.includes(boss[0])) { //if boss is in the list
+      return randomFromArray(bossArray)
+    }
+    else {
+      alreadyTweeted.list.push(boss)
+      return boss
+    }
+  } else {
+    alreadyTweeted.list.clear()
+  }
 }
 
 preTweet()
