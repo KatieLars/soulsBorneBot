@@ -30,15 +30,7 @@ googleAuth.authorize()
     })
   }
 
-// function selectBoss(bossArray) {
-//   var randomBoss = randomFromArray(bossArray)
-//   tweet(boss)
-// }
-
 var tweet = (boss) => {
-//  var randomBoss = randomFromArray(bossArray)
-//  console.log(randomBoss)
-  console.log(alreadyTweeted.list)
   var b64content = fs.readFileSync(boss[1], { encoding: 'base64' })
   Twitter.post('media/upload', { media_data: b64content }, function (err, data, response) {
     if (err){
@@ -121,13 +113,8 @@ function grabBosses(auth){
       }
 })};
 
-// function selectBoss(bossArray) {
-//   randomFromArray(bossArray)
-// }
-
 function selectBoss(bossArray){//bossArray is an array of arrays
   let chosenBoss = bossArray[Math.floor(Math.random() * bossArray.length)];
-  //console.log(chosenBoss)
   duplicateBoss(chosenBoss, bossArray)
 }
 
