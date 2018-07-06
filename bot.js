@@ -101,7 +101,7 @@ function grabBosses(auth){
   const sheets = google.sheets({version: 'v4', auth})
   var request = {
     "spreadsheetId": "1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc",
-    "range": "A2:C49"
+    "range": "'Main'!A2:C49"
   };
   sheets.spreadsheets.values.get(request, (err, {data}) => {
       if (err) return console.log('The API returned an error: ' + err);
