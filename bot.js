@@ -13,7 +13,7 @@ const SPREADSHEET_ID = '1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc'
 var preTweet = () => {
 googleAuth.authorize()
     .then((auth) => {
-      grabBosses(auth, "A2:C27"),
+      grabBosses(auth),
        function (err, response) {
             if (err) {
                 console.log('The API returned an error: ' + err);
@@ -97,16 +97,16 @@ var tweet = (bossArray) => {
 //   });
 // }
 
-function grabBosses(auth, range){
+function grabBosses(auth){
   const sheets = google.sheets({version: 'v4', auth})
   var request = {
-    spreadsheetId: "1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc",
-    range: `${range}`,
-    majorDimension: "ROWS"
+    "spreadsheetId": "1LZy3cPZAW-STv1jiUIJC1WBAU2n4Lj7VcLdEn_H1_Gc",
+    "range": "A2:C49"
   };
   sheets.spreadsheets.values.get(request, (err, {data}) => {
       if (err) return console.log('The API returned an error: ' + err);
       const rows = data.values;
+      console.log(rows)
       if (rows.length) {
 
         tweet(rows)
