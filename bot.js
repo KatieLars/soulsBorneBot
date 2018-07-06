@@ -31,6 +31,7 @@ googleAuth.authorize()
 
 var tweet = (bossArray) => {
   var randomBoss = randomFromArray(bossArray)
+  console.log(randomBoss)
   var b64content = fs.readFileSync(randomBoss[1], { encoding: 'base64' })
   Twitter.post('media/upload', { media_data: b64content }, function (err, data, response) {
     if (err){
