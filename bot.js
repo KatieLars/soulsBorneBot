@@ -135,5 +135,5 @@ function duplicateBoss(boss, bossArray){
 }
 
 preTweet()
-
-setInterval(preTweet, 7200000);
+//7200000
+setInterval(preTweet, 6000);
