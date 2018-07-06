@@ -20,10 +20,10 @@ function randomSearchTerm(){
 
 function retweet() {
   var searchTerm = randomSearchTerm()
-  console.log(searchTerm)
   var params = {
     q: `${searchTerm}`,
-    lang: 'en'
+    lang: 'en',
+    result_type: 'recent'
   }
   Twitter.get('search/tweets', params, function(err, data) {
       // if there no errors
@@ -172,6 +172,6 @@ function duplicateBoss(boss, bossArray){
 }
 
 preTweet()
-setInterval(preTweet, 7200000000);
+setInterval(preTweet, 7200000)
 retweet()
-setInterval(retweet, 3600000000)
+setInterval(retweet, 3600000)
